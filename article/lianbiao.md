@@ -77,13 +77,11 @@ public ListNode reverse(ListNode node){
 	dummyNode.next = node;
 	
 	while (node.next != null) {
-		ListNode curNode = node.next;
-		node.next = curNode.next;
-		curNode.next = dummyNode.next;
-		dummyNode.next = curNode;
+		ListNode cur = node.next;
+		node.next = cur.next;
+		cur.next = dummyNode.next;
+		dummyNode.next = cur;
 	}
-	
-	return dummpNode.next;
 }
 ```
 
