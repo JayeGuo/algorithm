@@ -1,12 +1,12 @@
 # 一、什么是链表？
 
-链表跟数组一样，是线性结构的一种，主要由两部分组成，data 部分是数据，next 是指向下个节点的指针，第一个节点，通常叫做头结点，最后一个节点叫做尾结点，尾节点的 next 指向 Null。
+链表是线性表的一种，主要由两部分构成，data 部分存放数据，next 是指向下个节点的指针，也叫做后继指针。通常，把第一个节点叫做头结点，最后一个节点叫做尾结点，尾节点的 next 指向 Null。
 
 链表和数组都是很基础的数据结构，在底层存储上，链表就像一根针线一样，把分散的内存块串联起来了。
 
 如图所示：
 
-![image-20220613132937425](image/image-20220613132937425.png)
+![image-20220613172123199](image/image-20220613172123199.png)
 
 
 
@@ -14,16 +14,28 @@
 
 除了单链表，还有比较复杂的双链表和循环链表
 
-# 二、特征
+双链表，也叫双向链表，在单向链表的基础上，又多了一个前继指针 prev，来指向前一个节点。跟公路一样，有单行道和双行道的区别，单行道，交通规则简单，只能单向行驶，而双行道，规则会更加复杂。
 
-链表有两种常见类型，单向链表和双向链表
+如图所示：
 
-单链表的结构：
+![image-20220613172506456](image/image-20220613172506456.png)
+
+循环链表，首尾相连，构成了一个环。
+
+![image-20220613172706470](image/image-20220613172706470.png)
+
+
+
+
+
+# 三、结构
+
+单链表和双链表的结构如下，双链表的结构多了一个 prev 。
 
 ```java
 public class ListNode {
 	int val;
-	ListNode next;
+	ListNode next; // 后继指针
 	ListNode(int val){
 		this.val = val;
 	}
@@ -33,79 +45,62 @@ public class ListNode {
 ```java
 public class ListNode {
 	int val;
-	ListNode next;
-	ListNode pre;
+	ListNode next; 
+	ListNode prev;// 前继指针
 	ListNode(int val){
 		this.val = val;
 	}
 }
 ```
 
-双向链表多了一个 pre 引用，来标识跟前置节点的关系，用来往回检索
+# 四、增删改查
 
-# 三、行为
+单链表中，增加一个节点的，需要考虑哪些情况？
 
-操作上，来看看增删改查
+> 1、插入节点的 next 指向谁；
+> 2、谁的 next 指向插入节点
+
+如图所示：
+
+![image-20220615175353108](image/image-20220615175353108.png)
+
+代码如下：
 
 ```java
-// 头插法
-cur.next = head.next;
-head.next = cur;
+cur.next = x.next; // 第一步：当前节点的 next 指向 y
+x.next = cur; // 第二步：x 的 next 指向当前节点
 ```
+
+这里注意下，步骤反过来写可以吗？大家可以按照这个画一下，看会出现什么问题。
 
 ```java
-// 尾插法
-cur.next = tail.next
-tail.next = cur;
+x.next = cur; // 第一步：x 的 next 指向当前节点
+cur.next = x.next; // 第二步：当前节点的 next 指向 y
 ```
 
+双链表，增加一个节点，需要考虑哪些情况？从结构上可以看出，需要额外考虑 prev 指针
 
+> 1、插入节点的 next，prev 指向谁；
+> 2、谁的 next 指向插入节点；
+> 3、谁的 prev 指向插入节点。
 
-3、指定位置删除节点
+如图所示：
 
+![image-20220615181509547](image/image-20220615181509547.png)
 
+代码如下
 
-# 四、场景
+```java
+cur.next = x.next;
+x.next.pre = cur; // 这两步处理的是 cur 和 y 的关系
 
-1、链表翻转
-
-```
-public ListNode reverse(ListNode node){
-	if (node == null) return node;
-	
-	ListNode dummyNode = new ListNode(-1);
-	dummyNode.next = node;
-	
-	while (node.next != null) {
-		ListNode cur = node.next;
-		node.next = cur.next;
-		cur.next = dummyNode.next;
-		dummyNode.next = cur;
-	}
-}
+x.next = cur;
+cur.pre = x; // 这两部处理的是 cur 和 x 的关系
 ```
 
-2、指定区间翻转
-
-```
-public ListNode reverse(ListNode head, int m, int n){
-	
-}
-```
-
-3、每 k 个 翻转
-
-```
-
-```
+总的来说，链表操作的核心在于弄清节点之间的关系，关系是可枚举的，单链表的节点关系只有一种，就是谁是谁的后继指针，双链表多一个前继指针关系。
 
 
 
-# 五、技巧
 
-## 虚拟节点
-
-用途：减少边界条件的判断
-
-命名：dummyNode
 
